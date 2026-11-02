@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Tarefas</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Minha Lista de Tarefas</h1>
+        <p class="subtitle">Organize suas atividades diárias com facilidade</p>
+      </div>
+    </header>
+
+    <!-- Formulário para Adicionar Tarefa -->
+    <form id="task-form" class="task-form" autocomplete="off">
+      <div class="input-wrapper">
+        <input 
+          type="text" 
+          id="task-input" 
+          placeholder="Digite uma nova atividade..." 
+          aria-label="Nova tarefa"
+          required
+        >
+      </div>
+      <button type="submit" id="add-btn" class="btn btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Adicionar</span>
+      </button>
+    </form>
+
+    <!-- Painel de Filtros e Estatísticas -->
+    <section class="task-controls">
+      <div class="filters">
+        <button type="button" class="filter-btn active" data-filter="all">Todas</button>
+        <button type="button" class="filter-btn" data-filter="pending">Pendentes</button>
+        <button type="button" class="filter-btn" data-filter="completed">Concluídas</button>
+      </div>
+
+      <div class="stats-badge" id="stats-badge">
+        <span id="pending-count">0 pendentes</span>
+      </div>
+    </section>
+
+    <!-- Lista de Tarefas -->
+    <ul id="task-list" class="task-list" aria-live="polite">
+      <!-- As tarefas serão inseridas dinamicamente via JavaScript -->
+    </ul>
+
+    <!-- Estado Vazio -->
+    <div id="empty-state" class="empty-state">
+      <div class="empty-icon">📝</div>
+      <h3>Nenhuma tarefa por aqui</h3>
+      <p>Digite uma atividade acima e clique em "Adicionar" para começar.</p>
+    </div>
+
+    <!-- Rodapé de Ações Rápidas -->
+    <footer class="app-footer">
+      <span id="total-info" class="total-info">0 tarefas no total</span>
+      <button type="button" id="clear-completed" class="btn-text" style="display: none;">
+        Limpar concluídas
+      </button>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
