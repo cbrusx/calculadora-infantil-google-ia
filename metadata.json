@@ -1,0 +1,7 @@
+{
+  "name": "Calculadora Infantil",
+  "description": "Calculadora infantil interativa com as 4 operações básicas da matemática, representação visual e código Python para aprender.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
