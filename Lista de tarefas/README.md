@@ -10,11 +10,14 @@ Aplicação web intuitiva, moderna e responsiva para gerenciamento e acompanhame
    - Digite o nome da atividade no campo de texto e clique em **"Adicionar"** (ou aperte a tecla `Enter`).
    - Validação automática para impedir itens vazios.
 
-2. **Marcar como Concluídas**:
-   - Marque a caixa de seleção (checkbox) ou clique no texto da tarefa.
-   - Tarefas concluídas recebem estilo tachado e tom suavizado, facilitando a identificação imediata do que já foi feito.
+2. **Diferenciação Visual Instantânea de Tarefas**:
+   - **Tarefas Pendentes**: cartão branco com borda lateral azul/índigo (`border-left: 5px solid`), texto em destaque e badge explicativo `⏳ Pendente`.
+   - **Tarefas Concluídas**: cartão com fundo suave esmeralda (`#f0fdf4`), borda lateral verde (`border-left: 5px solid`), texto tachado com linha verde e badge `✓ Concluída`.
 
-3. **Remover Tarefas**:
+3. **Marcar como Concluídas**:
+   - Marque a caixa de seleção (checkbox) ou clique no texto da atividade para alternar o status instantaneamente.
+
+4. **Remover Tarefas**:
    - Botão de lixeira individual para excluir tarefas que não são mais necessárias, com animação suave de saída.
    - Opção para limpar todas as tarefas concluídas de uma só vez.
 

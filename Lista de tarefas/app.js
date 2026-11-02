@@ -156,7 +156,7 @@ function render() {
       li.className = `task-item ${task.completed ? 'completed' : ''}`;
       li.dataset.id = task.id;
 
-      // Container esquerdo (checkbox + texto)
+      // Container esquerdo (checkbox + conteúdo com texto e badge)
       const leftDiv = document.createElement('div');
       leftDiv.className = 'task-left';
 
@@ -164,18 +164,31 @@ function render() {
       checkbox.type = 'checkbox';
       checkbox.className = 'custom-checkbox';
       checkbox.checked = task.completed;
-      checkbox.setAttribute('aria-label', `Marcar "${task.text}" como concluída`);
+      checkbox.setAttribute('aria-label', `Marcar "${task.text}" como ${task.completed ? 'pendente' : 'concluída'}`);
+
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'task-content';
 
       const textSpan = document.createElement('span');
       textSpan.className = 'task-text';
       textSpan.textContent = task.text;
 
+      // Badge visual de status (Concluída vs Pendente)
+      const badge = document.createElement('span');
+      badge.className = `task-badge ${task.completed ? 'badge-completed' : 'badge-pending'}`;
+      badge.innerHTML = task.completed
+        ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Concluída`
+        : `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Pendente`;
+
       // Ações ao clicar no texto ou no checkbox
       checkbox.addEventListener('change', () => toggleTask(task.id));
       textSpan.addEventListener('click', () => toggleTask(task.id));
 
+      contentDiv.appendChild(textSpan);
+      contentDiv.appendChild(badge);
+
       leftDiv.appendChild(checkbox);
-      leftDiv.appendChild(textSpan);
+      leftDiv.appendChild(contentDiv);
 
       // Botão de excluir
       const actionsDiv = document.createElement('div');

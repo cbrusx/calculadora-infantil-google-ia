@@ -218,14 +218,15 @@ body {
   border-radius: 999px;
 }
 
-/* Task Item */
+/* Task Item - Estilo Base */
 .task-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 14px 16px;
   background: #ffffff;
   border: 1px solid var(--border-color);
+  border-left: 5px solid var(--primary); /* Destaque azul/índigo para pendente */
   border-radius: var(--radius-md);
   transition: var(--transition);
   animation: fadeIn 0.25s ease-out;
@@ -233,18 +234,38 @@ body {
 
 .task-item:hover {
   border-color: #cbd5e1;
+  border-left-color: var(--primary-hover);
   box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
+/* Tarefas Concluídas - Diferenciação Visual Completa */
 .task-item.completed {
-  background: var(--completed-bg);
-  border-color: #e2e8f0;
+  background: #f0fdf4; /* Fundo esmeralda bem suave */
+  border-color: #bbf7d0; /* Borda esmeralda clara */
+  border-left: 5px solid var(--success); /* Destaque verde/esmeralda para concluída */
+  opacity: 0.92;
+}
+
+.task-item.completed:hover {
+  border-color: #86efac;
+  border-left-color: #059669;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
 }
 
 .task-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   flex: 1;
   min-width: 0;
 }
@@ -253,8 +274,8 @@ body {
 .custom-checkbox {
   appearance: none;
   -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border: 2px solid #cbd5e1;
   border-radius: 6px;
   cursor: pointer;
@@ -278,16 +299,18 @@ body {
 
 .custom-checkbox:checked::after {
   content: '';
-  width: 5px;
-  height: 9px;
+  width: 6px;
+  height: 10px;
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
   margin-bottom: 2px;
 }
 
+/* Texto da Tarefa */
 .task-text {
   font-size: 0.95rem;
+  font-weight: 500;
   color: var(--text-main);
   word-break: break-word;
   transition: var(--transition);
@@ -296,9 +319,38 @@ body {
   cursor: pointer;
 }
 
+/* Efeito visual no texto concluído */
 .task-item.completed .task-text {
-  color: var(--completed-text);
+  color: #64748b;
   text-decoration: line-through;
+  text-decoration-color: #10b981;
+  text-decoration-thickness: 2px;
+}
+
+/* Badges visuais de status */
+.task-badge {
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+  letter-spacing: 0.02em;
+  transition: var(--transition);
+}
+
+.badge-pending {
+  background: var(--primary-light);
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
+}
+
+.badge-completed {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
 }
 
 .task-actions {
