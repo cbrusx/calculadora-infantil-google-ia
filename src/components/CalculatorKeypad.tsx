@@ -68,7 +68,6 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
     sound.playPop(520);
     setOp(selectedOp);
     setCurrentInput('num2');
-    setDisplayValue('0');
     setResult(null);
 
     const opSymbolMap: Record<string, string> = {
@@ -76,8 +75,19 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
       '-': '−',
       '*': '×',
       '/': '÷',
+      '%': '% de',
     };
-    setHistoryText(`${num1} ${opSymbolMap[selectedOp] || selectedOp}`);
+
+    if (selectedOp === '%') {
+      // For percentage, default num2 to 100 (whole chocolate bar / pizza) if not set
+      const defaultTotal = num2 > 0 ? num2 : 100;
+      setNum2(defaultTotal);
+      setDisplayValue(defaultTotal.toString());
+      setHistoryText(`${num1} % de ${defaultTotal}`);
+    } else {
+      setDisplayValue('0');
+      setHistoryText(`${num1} ${opSymbolMap[selectedOp] || selectedOp}`);
+    }
   };
 
   const handleCalculate = () => {
@@ -88,6 +98,8 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
     else if (op === '/') {
       if (num2 === 0) res = null;
       else res = num1 / num2;
+    } else if (op === '%') {
+      res = (num1 * num2) / 100;
     }
 
     const opSymbolMap: Record<string, string> = {
@@ -95,6 +107,7 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
       '-': '−',
       '*': '×',
       '/': '÷',
+      '%': '% de',
     };
 
     setResult(res);
@@ -102,7 +115,7 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
 
     if (res !== null) {
       sound.playSuccess();
-      setDisplayValue(res.toString());
+      setDisplayValue(Number.isInteger(res) ? res.toString() : res.toFixed(2));
       speech.speakOperation(num1, op, num2, res);
     } else {
       sound.playBoing();
@@ -159,6 +172,9 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
       } else if (e.key === '/') {
         e.preventDefault();
         handleSelectOp('/');
+      } else if (e.key === '%') {
+        e.preventDefault();
+        handleSelectOp('%');
       } else if (e.key === 'Enter' || e.key === '=') {
         e.preventDefault();
         handleCalculate();
@@ -174,14 +190,14 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
   }, [displayValue, currentInput, num1, num2, op, result]);
 
   return (
-    <div className="bg-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl border-4 border-amber-300">
+    <div className="bg-slate-900 text-white rounded-3xl p-4 sm:p-6 shadow-xl border-4 border-amber-300">
       {/* Screen Display */}
-      <div className="bg-slate-950 rounded-2xl p-4 sm:p-5 mb-5 border-2 border-slate-800 shadow-inner">
+      <div className="bg-slate-950 rounded-2xl p-4 sm:p-5 mb-4 border-2 border-slate-800 shadow-inner">
         <div className="flex items-center justify-between text-xs text-amber-400 font-semibold mb-1 min-h-[20px]">
-          <span>{historyText || 'Digite uma continha...'}</span>
+          <span className="truncate">{historyText || 'Digite uma continha...'}</span>
           <button
             onClick={handleSpeakCurrent}
-            className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-300 transition-colors bg-slate-800/80 px-2 py-0.5 rounded-md"
+            className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-300 transition-colors bg-slate-800/80 px-2 py-0.5 rounded-md shrink-0 ml-2"
             title="Ouvir a conta falada"
           >
             <Volume2 className="w-3.5 h-3.5" />
@@ -195,8 +211,8 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
         </div>
       </div>
 
-      {/* 4 Basic Operations Bar (Prominent & Colored for Children) */}
-      <div className="grid grid-cols-4 gap-2.5 mb-3.5">
+      {/* 5 Operations Bar (Prominent & Colored for Children) */}
+      <div className="grid grid-cols-5 gap-1.5 sm:gap-2 mb-3.5">
         <button
           onClick={() => handleSelectOp('+')}
           className={`h-14 sm:h-16 rounded-2xl flex flex-col items-center justify-center transition-all transform active:scale-95 shadow-md ${
@@ -207,7 +223,7 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
           title="Adição (Somar)"
         >
           <span className="text-2xl sm:text-3xl font-black leading-none">+</span>
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Somar</span>
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-tight">Somar</span>
         </button>
 
         <button
@@ -220,7 +236,7 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
           title="Subtração (Diminuir)"
         >
           <span className="text-2xl sm:text-3xl font-black leading-none">−</span>
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Tirar</span>
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-tight">Tirar</span>
         </button>
 
         <button
@@ -233,7 +249,7 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
           title="Multiplicação (Vezes)"
         >
           <span className="text-2xl sm:text-3xl font-black leading-none">×</span>
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Vezes</span>
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-tight">Vezes</span>
         </button>
 
         <button
@@ -246,7 +262,20 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
           title="Divisão (Repartir)"
         >
           <span className="text-2xl sm:text-3xl font-black leading-none">÷</span>
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Repartir</span>
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-tight">Repartir</span>
+        </button>
+
+        <button
+          onClick={() => handleSelectOp('%')}
+          className={`h-14 sm:h-16 rounded-2xl flex flex-col items-center justify-center transition-all transform active:scale-95 shadow-md ${
+            op === '%' && currentInput === 'num2'
+              ? 'bg-amber-400 text-slate-950 ring-4 ring-amber-200'
+              : 'bg-amber-600 hover:bg-amber-500 text-white'
+          }`}
+          title="Porcentagem (% - Barra de 100 Pedacinhos)"
+        >
+          <span className="text-2xl sm:text-3xl font-black leading-none">%</span>
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-tight">Cento</span>
         </button>
       </div>
 

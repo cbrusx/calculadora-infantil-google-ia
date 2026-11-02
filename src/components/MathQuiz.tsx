@@ -6,7 +6,7 @@ import { ITEM_THEMES } from './VisualCounter';
 
 interface QuizQuestion {
   num1: number;
-  op: '+' | '-' | '*' | '/';
+  op: '+' | '-' | '*' | '/' | '%';
   opSymbol: string;
   num2: number;
   correctAnswer: number;
@@ -27,7 +27,7 @@ export const MathQuiz: React.FC = () => {
     setIsAnswered(false);
     setSelectedOption(null);
 
-    const ops: Array<'+' | '-' | '*' | '/'> = ['+', '-', '*', '/'];
+    const ops: Array<'+' | '-' | '*' | '/' | '%'> = ['+', '-', '*', '/', '%'];
     const chosenOp = ops[Math.floor(Math.random() * ops.length)];
     const theme = ITEM_THEMES[Math.floor(Math.random() * ITEM_THEMES.length)];
 
@@ -36,6 +36,7 @@ export const MathQuiz: React.FC = () => {
     let answer = 0;
     let symbol = '+';
     let story = '';
+    let emoji = theme.emoji;
 
     if (chosenOp === '+') {
       n1 = Math.floor(Math.random() * 8) + 1;
@@ -55,7 +56,7 @@ export const MathQuiz: React.FC = () => {
       answer = n1 * n2;
       symbol = '×';
       story = `Você tem ${n1} caixinhas, e cada caixinha guarda ${n2} ${theme.plural}. Quantas figurinhas têm ao todo?`;
-    } else {
+    } else if (chosenOp === '/') {
       // Division: clean integer division
       n2 = Math.floor(Math.random() * 3) + 2; // 2, 3, 4
       const quotient = Math.floor(Math.random() * 4) + 1; // 1, 2, 3, 4
@@ -63,12 +64,22 @@ export const MathQuiz: React.FC = () => {
       answer = quotient;
       symbol = '÷';
       story = `Você tem ${n1} ${theme.plural} para repartir igualmente com ${n2} amigos. Quantas cada um recebe?`;
+    } else {
+      // Percentage (%)
+      const percentages = [10, 20, 25, 50, 75];
+      n1 = percentages[Math.floor(Math.random() * percentages.length)];
+      n2 = 100;
+      answer = (n1 * n2) / 100;
+      symbol = '% de';
+      emoji = '🍫';
+      story = `Uma barra de chocolate tem exatamente 100 quadradinhos. Você separou ${n1}% para saborear. Quantos quadradinhos você pegou?`;
     }
 
     // Generate 3 unique options
-    const wrong1 = answer + (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
-    let wrong2 = answer + (Math.random() > 0.5 ? 2 : -2);
-    if (wrong1 === wrong2 || wrong2 <= 0) wrong2 = answer + 3;
+    const step = chosenOp === '%' ? (n1 >= 20 ? 5 : 2) : 1;
+    const wrong1 = answer + (Math.random() > 0.5 ? step : -step);
+    let wrong2 = answer + (Math.random() > 0.5 ? step * 2 : -step * 2);
+    if (wrong1 === wrong2 || wrong2 <= 0) wrong2 = answer + step * 3;
 
     const options = [answer, Math.max(0, wrong1), Math.max(1, wrong2)]
       .filter((v, i, a) => a.indexOf(v) === i)
@@ -76,7 +87,7 @@ export const MathQuiz: React.FC = () => {
 
     // If options length < 3, ensure 3 unique choices
     while (options.length < 3) {
-      const extra = answer + options.length + 1;
+      const extra = answer + (options.length + 1) * step;
       if (!options.includes(extra)) options.push(extra);
     }
 
@@ -88,7 +99,7 @@ export const MathQuiz: React.FC = () => {
       correctAnswer: answer,
       storyText: story,
       options,
-      themeEmoji: theme.emoji,
+      themeEmoji: emoji,
     });
   };
 
@@ -209,6 +220,20 @@ export const MathQuiz: React.FC = () => {
                 {Array.from({ length: currentQuestion.num1 }).map((_, i) => (
                   <span key={i}>{currentQuestion.themeEmoji}</span>
                 ))}
+              </div>
+            )}
+
+            {currentQuestion.op === '%' && (
+              <div className="flex flex-col items-center gap-2 bg-white p-3 rounded-xl border border-slate-200">
+                <div className="flex items-center gap-1 text-xs font-bold text-amber-900">
+                  <span>🍫 Barra de Chocolate: {currentQuestion.num1}% de 100 pedacinhos</span>
+                </div>
+                <div className="w-48 sm:w-64 h-4 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-amber-300">
+                  <div
+                    className="h-full bg-gradient-to-r from-amber-600 to-amber-800 rounded-full"
+                    style={{ width: `${currentQuestion.num1}%` }}
+                  />
+                </div>
               </div>
             )}
           </div>

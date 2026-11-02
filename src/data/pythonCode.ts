@@ -1,6 +1,6 @@
 export const PYTHON_SCRIPT_CODE = `"""
 🐾 CALCULADORA INFANTIL EM PYTHON 🐾
-As 4 operações básicas da matemática explicadas passo a passo!
+As 4 operações básicas da matemática + Porcentagem explicadas passo a passo!
 """
 
 # Função 1: Adição (Somar / Juntar)
@@ -21,6 +21,10 @@ def dividir(a, b):
         return None  # Não dá para dividir por zero!
     return a / b
 
+# Função 5: Porcentagem (Pedacinhos de 100 - Chocolate)
+def porcentagem(porcento, total):
+    return (porcento * total) / 100
+
 # Função para desenhar figurinhas na tela
 def desenhar_figurinhas(quantidade, emoji="🍎"):
     if quantidade <= 0:
@@ -31,30 +35,35 @@ def desenhar_figurinhas(quantidade, emoji="🍎"):
 
 # Programa Principal Interativo
 def calculadora_infantil():
-    print("=" * 44)
+    print("=" * 46)
     print("   🌈 BEM-VINDO À CALCULADORA INFANTIL! 🌈")
-    print("=" * 44)
+    print("=" * 46)
     print("Escolha a operação:")
     print("  [1] ➕ Adição (Somar)")
     print("  [2] ➖ Subtração (Tirar)")
     print("  [3] ✖️ Multiplicação (Vezes)")
     print("  [4] ➗ Divisão (Repartir)")
-    print("  [5] ❌ Sair")
+    print("  [5] 🍫 Porcentagem (Pedacinhos de 100)")
+    print("  [6] ❌ Sair")
     
     while True:
-        opcao = input("\\nQual operação você quer fazer (1-5)? ").strip()
+        opcao = input("\\nQual operação você quer fazer (1-6)? ").strip()
         
-        if opcao == "5":
+        if opcao == "6":
             print("\\n🌟 Parabéns pelos estudos! Até logo! 👋\\n")
             break
             
-        if opcao not in ["1", "2", "3", "4"]:
-            print("⚠️ Digite um número de 1 a 5, por favor!")
+        if opcao not in ["1", "2", "3", "4", "5"]:
+            print("⚠️ Digite um número de 1 a 6, por favor!")
             continue
             
         try:
-            num1 = float(input("Digite o 1º número: "))
-            num2 = float(input("Digite o 2º número: "))
+            if opcao == "5":
+                num1 = float(input("Digite a PORCENTAGEM (ex: 20 para 20%): "))
+                num2 = float(input("Digite o VALOR TOTAL (ex: 100 para barra inteira): "))
+            else:
+                num1 = float(input("Digite o 1º número: "))
+                num2 = float(input("Digite o 2º número: "))
         except ValueError:
             print("⚠️ Digite apenas números válidos!")
             continue
@@ -83,6 +92,12 @@ def calculadora_infantil():
                 res = dividir(num1, num2)
                 print(f"\\n🎉 {num1} ÷ {num2} = {res}")
                 print(f"💡 Repartindo igualmente, cada um ganha {res}!")
+
+        elif opcao == "5":
+            res = porcentagem(num1, num2)
+            print(f"\\n🎉 {num1}% de {num2} = {res}")
+            print("🍫 Imagine uma barra de chocolate dividida em 100 quadradinhos!")
+            print(f"💡 Pegar {num1}% de {num2} é como saborear {res} pedacinhos deliciosos!")
 
 if __name__ == "__main__":
     calculadora_infantil()
@@ -115,11 +130,19 @@ export const PYTHON_CONCEPTS: PythonConcept[] = [
     childAnalogy: 'É como uma regra do recreio: "Se chover, ficamos dentro; se fizer sol, vamos para o parquinho!"',
   },
   {
+    id: 'percentage',
+    title: 'Porcentagem (Pedacinhos de 100)',
+    iconName: 'Sparkles',
+    explanation: 'A porcentagem calcula frações de 100. Em Python, multiplicamos a porcentagem pelo valor total e dividimos por 100!',
+    codeSnippet: `def porcentagem(porcento, total):\n    return (porcento * total) / 100`,
+    childAnalogy: 'Imagine uma barra de 100 quadradinhos de chocolate 🍫. 20% significa que você comeu 20 quadradinhos deliciosos!',
+  },
+  {
     id: 'loops',
     title: 'Repetição (while True)',
     iconName: 'Repeat',
-    explanation: 'O comando "while" faz a calculadora continuar aberta para a criança fazer quantas continhas quiser, até escolher a opção 5 para sair.',
-    codeSnippet: `while True:\n    opcao = input("Qual operação? ")\n    if opcao == "5":\n        break`,
+    explanation: 'O comando "while" faz a calculadora continuar aberta para a criança fazer quantas continhas quiser, até escolher a opção 6 para sair.',
+    codeSnippet: `while True:\n    opcao = input("Qual operação? ")\n    if opcao == "6":\n        break`,
     childAnalogy: 'É como um carrossel do parque que continua girando com segurança até você pedir para descer.',
   },
   {

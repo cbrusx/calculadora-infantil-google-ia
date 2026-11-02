@@ -13,13 +13,13 @@ export default function App() {
   const [audioEnabled, setAudioEnabled] = useState(true);
 
   // Calculator state
-  const [num1, setNum1] = useState<number>(3);
-  const [op, setOp] = useState<string>('+');
-  const [num2, setNum2] = useState<number>(2);
-  const [result, setResult] = useState<number | null>(5);
-  const [displayValue, setDisplayValue] = useState<string>('5');
+  const [num1, setNum1] = useState<number>(25);
+  const [op, setOp] = useState<string>('%');
+  const [num2, setNum2] = useState<number>(100);
+  const [result, setResult] = useState<number | null>(25);
+  const [displayValue, setDisplayValue] = useState<string>('25');
   const [currentInput, setCurrentInput] = useState<'num1' | 'num2'>('num1');
-  const [historyText, setHistoryText] = useState<string>('3 + 2 =');
+  const [historyText, setHistoryText] = useState<string>('25 % de 100 =');
   const [selectedTheme, setSelectedTheme] = useState<MathItemTheme>('apples');
 
   return (
@@ -53,18 +53,19 @@ export default function App() {
                     Olá, pequeno matemático! 🐾
                   </h1>
                   <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl">
-                    Esta calculadora ensina as <strong>4 operações básicas</strong> de forma visual e divertida.
+                    Esta calculadora ensina as <strong>operações básicas e porcentagem</strong> de forma visual e divertida.
                     Você também pode ver o <strong>código em Python</strong> pronto para o seu computador!
                   </p>
                 </div>
               </div>
 
               {/* Quick Operation Guide */}
-              <div className="flex items-center gap-2 text-xs font-semibold shrink-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs font-semibold shrink-0">
                 <span className="px-2.5 py-1 rounded-lg bg-sky-100 text-sky-800">➕ Somar</span>
                 <span className="px-2.5 py-1 rounded-lg bg-orange-100 text-orange-800">➖ Tirar</span>
                 <span className="px-2.5 py-1 rounded-lg bg-purple-100 text-purple-800">✖️ Vezes</span>
                 <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800">➗ Repartir</span>
+                <span className="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900">🍫 Porcento (%)</span>
               </div>
             </div>
 
@@ -100,7 +101,8 @@ export default function App() {
                     <kbd className="px-1 py-0.5 bg-slate-100 border rounded text-[11px] font-mono">+</kbd>,{' '}
                     <kbd className="px-1 py-0.5 bg-slate-100 border rounded text-[11px] font-mono">-</kbd>,{' '}
                     <kbd className="px-1 py-0.5 bg-slate-100 border rounded text-[11px] font-mono">*</kbd>,{' '}
-                    <kbd className="px-1 py-0.5 bg-slate-100 border rounded text-[11px] font-mono">/</kbd> e{' '}
+                    <kbd className="px-1 py-0.5 bg-slate-100 border rounded text-[11px] font-mono">/</kbd>,{' '}
+                    <kbd className="px-1 py-0.5 bg-slate-100 border rounded text-[11px] font-mono">%</kbd> e{' '}
                     <kbd className="px-1 py-0.5 bg-slate-100 border rounded text-[11px] font-mono">Enter</kbd> para calcular!
                   </p>
                 </div>
@@ -157,7 +159,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <span>🐾 Calculadora Infantil em Python</span>
             <span aria-hidden="true">·</span>
-            <span>Matemática Básica para Crianças</span>
+            <span>Matemática Básica & Porcentagem</span>
           </div>
 
           <div className="flex items-center gap-4">

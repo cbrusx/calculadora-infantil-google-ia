@@ -60,11 +60,18 @@ class SpeechNarrator {
       return;
     }
 
+    if (op === '%') {
+      const text = `${num1} por cento de ${num2} é igual a ${result}! São ${result} pedacinhos saborosos da nossa barra de chocolate! Muito bem!`;
+      this.speak(text);
+      return;
+    }
+
     const opMap: Record<string, string> = {
       '+': 'mais',
       '-': 'menos',
       '*': 'vezes',
       '/': 'dividido por',
+      '%': 'por cento de',
     };
 
     const opWord = opMap[op] || 'operado com';

@@ -18,9 +18,10 @@ export const PythonTerminalSimulator: React.FC = () => {
     { text: '  [2] ➖ Subtração    (Tirar / Diminuir)', type: 'system' },
     { text: '  [3] ✖️ Multiplicação (Grupinhos / Vezes)', type: 'system' },
     { text: '  [4] ➗ Divisão      (Repartir igualmente)', type: 'system' },
-    { text: '  [5] ❌ Sair', type: 'system' },
+    { text: '  [5] 🍫 Porcentagem  (Pedacinhos de 100 - Chocolate)', type: 'system' },
+    { text: '  [6] ❌ Sair', type: 'system' },
     { text: '============================================================', type: 'system' },
-    { text: 'Digite o número da operação (1, 2, 3, 4 ou 5):', type: 'prompt' },
+    { text: 'Digite o número da operação (1, 2, 3, 4, 5 ou 6):', type: 'prompt' },
   ]);
 
   const [step, setStep] = useState<'op' | 'num1' | 'num2' | 'continue'>('op');
@@ -46,16 +47,16 @@ export const PythonTerminalSimulator: React.FC = () => {
     if (step === 'op') {
       newLines.push({ text: `> ${val}`, type: 'input' });
 
-      if (val === '5') {
+      if (val === '6') {
         newLines.push({ text: '\n🌟 Muito obrigado por estudar matemática hoje! Até a próxima! 👋\n', type: 'success' });
         setStep('continue');
         setLines(newLines);
         return;
       }
 
-      if (!['1', '2', '3', '4'].includes(val)) {
-        newLines.push({ text: '⚠️ Ops! Digite um número de 1 a 5, tá bom?', type: 'warning' });
-        newLines.push({ text: 'Digite o número da operação (1, 2, 3, 4 ou 5):', type: 'prompt' });
+      if (!['1', '2', '3', '4', '5'].includes(val)) {
+        newLines.push({ text: '⚠️ Ops! Digite um número de 1 a 6, tá bom?', type: 'warning' });
+        newLines.push({ text: 'Digite o número da operação (1, 2, 3, 4, 5 ou 6):', type: 'prompt' });
         setLines(newLines);
         return;
       }
@@ -65,33 +66,42 @@ export const PythonTerminalSimulator: React.FC = () => {
         '2': 'SUBTRAÇÃO (-)',
         '3': 'MULTIPLICAÇÃO (*)',
         '4': 'DIVISÃO (/)',
+        '5': 'PORCENTAGEM (%)',
       };
 
       setSelectedOp(val);
       newLines.push({ text: `\n✨ Vamos fazer uma conta de ${opNames[val]}! ✨`, type: 'system' });
-      newLines.push({ text: 'Digite o PRIMEIRO número:', type: 'prompt' });
+      if (val === '5') {
+        newLines.push({ text: 'Digite a PORCENTAGEM (ex: 20 para 20%):', type: 'prompt' });
+      } else {
+        newLines.push({ text: 'Digite o PRIMEIRO número:', type: 'prompt' });
+      }
       setStep('num1');
       setLines(newLines);
     } else if (step === 'num1') {
       newLines.push({ text: `> ${val}`, type: 'input' });
       const n1 = parseFloat(val);
       if (isNaN(n1)) {
-        newLines.push({ text: '⚠️ Ops! Digite apenas números válidos (ex: 3, 7, 10).', type: 'warning' });
-        newLines.push({ text: 'Digite o PRIMEIRO número:', type: 'prompt' });
+        newLines.push({ text: '⚠️ Ops! Digite apenas números válidos (ex: 3, 7, 20).', type: 'warning' });
+        newLines.push({ text: selectedOp === '5' ? 'Digite a PORCENTAGEM (ex: 20 para 20%):' : 'Digite o PRIMEIRO número:', type: 'prompt' });
         setLines(newLines);
         return;
       }
 
       setStoredNum1(n1);
-      newLines.push({ text: 'Digite o SEGUNDO número:', type: 'prompt' });
+      if (selectedOp === '5') {
+        newLines.push({ text: 'Digite o VALOR TOTAL (ex: 100 para uma barra inteira):', type: 'prompt' });
+      } else {
+        newLines.push({ text: 'Digite o SEGUNDO número:', type: 'prompt' });
+      }
       setStep('num2');
       setLines(newLines);
     } else if (step === 'num2') {
       newLines.push({ text: `> ${val}`, type: 'input' });
       const n2 = parseFloat(val);
       if (isNaN(n2)) {
-        newLines.push({ text: '⚠️ Ops! Digite apenas números válidos (ex: 2, 5, 8).', type: 'warning' });
-        newLines.push({ text: 'Digite o SEGUNDO número:', type: 'prompt' });
+        newLines.push({ text: '⚠️ Ops! Digite apenas números válidos (ex: 2, 5, 100).', type: 'warning' });
+        newLines.push({ text: selectedOp === '5' ? 'Digite o VALOR TOTAL (ex: 100):' : 'Digite o SEGUNDO número:', type: 'prompt' });
         setLines(newLines);
         return;
       }
@@ -119,20 +129,54 @@ export const PythonTerminalSimulator: React.FC = () => {
       } else if (selectedOp === '3') {
         res = storedNum1 * n2;
         symbol = '×';
-      } else {
+      } else if (selectedOp === '4') {
         res = storedNum1 / n2;
         symbol = '÷';
+      } else if (selectedOp === '5') {
+        res = (storedNum1 * n2) / 100;
+        symbol = '% de';
       }
 
       newLines.push({ text: '—'.repeat(46), type: 'system' });
-      newLines.push({
-        text: `🎉 RESULTADO: ${storedNum1} ${symbol} ${n2} = ${Number.isInteger(res) ? res : res.toFixed(2)}`,
-        type: 'success',
-      });
+      if (selectedOp === '5') {
+        newLines.push({
+          text: `🎉 RESULTADO: ${storedNum1}% de ${n2} = ${Number.isInteger(res) ? res : res.toFixed(2)}`,
+          type: 'success',
+        });
+      } else {
+        newLines.push({
+          text: `🎉 RESULTADO: ${storedNum1} ${symbol} ${n2} = ${Number.isInteger(res) ? res : res.toFixed(2)}`,
+          type: 'success',
+        });
+      }
       newLines.push({ text: '—'.repeat(46), type: 'system' });
 
-      // Visual items if small integers
-      if (Number.isInteger(storedNum1) && Number.isInteger(n2) && storedNum1 >= 0 && n2 >= 0 && storedNum1 <= 15 && n2 <= 15) {
+      // Visual items representation
+      if (selectedOp === '5') {
+        newLines.push({ text: '\n🍫 OLHA SÓ A BARRA DE CHOCOLATE DOS 100 QUADRADINHOS:', type: 'story' });
+        const p = Math.max(0, Math.min(100, Math.round(storedNum1)));
+        const blocks = Math.round(p / 5);
+        const emptyBlocks = 20 - blocks;
+        newLines.push({
+          text: `  [${'🍫'.repeat(blocks)}${'▫️ '.repeat(emptyBlocks)}] ${p}% de 100 pedacinhos`,
+          type: 'story',
+        });
+        newLines.push({
+          text: `  👉 ${Number.isInteger(res) ? res : res.toFixed(2)} pedacinhos saboreados de ${n2}!`,
+          type: 'story',
+        });
+        newLines.push({
+          text: `💡 "Por cento" quer dizer pegar pedacinhos de cada 100! Delícia! 🍫`,
+          type: 'story',
+        });
+      } else if (
+        Number.isInteger(storedNum1) &&
+        Number.isInteger(n2) &&
+        storedNum1 >= 0 &&
+        n2 >= 0 &&
+        storedNum1 <= 15 &&
+        n2 <= 15
+      ) {
         newLines.push({ text: '\n👀 OLHA SÓ COMO FICA COM MAÇÃS 🍎:', type: 'story' });
         if (selectedOp === '1') {
           newLines.push({
@@ -152,7 +196,7 @@ export const PythonTerminalSimulator: React.FC = () => {
       setLines(newLines);
     } else if (step === 'continue') {
       newLines.push({ text: '\n============================================================', type: 'system' });
-      newLines.push({ text: 'Digite o número da operação (1: +, 2: -, 3: *, 4: /, 5: sair):', type: 'prompt' });
+      newLines.push({ text: 'Digite o número da operação (1: +, 2: -, 3: *, 4: /, 5: %, 6: sair):', type: 'prompt' });
       setStep('op');
       setLines(newLines);
     }
@@ -165,7 +209,15 @@ export const PythonTerminalSimulator: React.FC = () => {
       { text: '           🐾 CALCULADORA INFANTIL EM PYTHON 🐾', type: 'system' },
       { text: '    Uma calculadora simples e divertida para crianças!', type: 'system' },
       { text: '============================================================', type: 'system' },
-      { text: 'Digite o número da operação (1, 2, 3, 4 ou 5):', type: 'prompt' },
+      { text: 'Escolha o que você quer fazer:', type: 'system' },
+      { text: '  [1] ➕ Adição       (Juntar / Somar)', type: 'system' },
+      { text: '  [2] ➖ Subtração    (Tirar / Diminuir)', type: 'system' },
+      { text: '  [3] ✖️ Multiplicação (Grupinhos / Vezes)', type: 'system' },
+      { text: '  [4] ➗ Divisão      (Repartir igualmente)', type: 'system' },
+      { text: '  [5] 🍫 Porcentagem  (Pedacinhos de 100 - Chocolate)', type: 'system' },
+      { text: '  [6] ❌ Sair', type: 'system' },
+      { text: '============================================================', type: 'system' },
+      { text: 'Digite o número da operação (1, 2, 3, 4, 5 ou 6):', type: 'prompt' },
     ]);
     setStep('op');
     setInputValue('');
@@ -242,6 +294,12 @@ export const PythonTerminalSimulator: React.FC = () => {
           >
             [4] ➗ Divisão
           </button>
+          <button
+            onClick={() => handleSend('5')}
+            className="px-2.5 py-1 rounded bg-amber-900/50 hover:bg-amber-800 text-amber-200 border border-amber-700/50"
+          >
+            [5] 🍫 Porcentagem
+          </button>
         </div>
       )}
 
@@ -261,7 +319,7 @@ export const PythonTerminalSimulator: React.FC = () => {
           onChange={e => setInputValue(e.target.value)}
           placeholder={
             step === 'op'
-              ? 'Digite 1, 2, 3, 4 ou 5 e tecle Enter...'
+              ? 'Digite 1, 2, 3, 4, 5 ou 6 e tecle Enter...'
               : step === 'num1' || step === 'num2'
               ? 'Digite um número e tecle Enter...'
               : 'Tecle Enter para continuar...'
